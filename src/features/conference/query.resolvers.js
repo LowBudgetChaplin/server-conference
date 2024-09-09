@@ -47,10 +47,7 @@ const conferenceQueryResolvers = {
             county:({countyId})=>{
                 return prisma().dictionaryCounty.findUnique({where:{id:countyId}})
             }
-        },
-    // Status:{
-
-    //     }
+        }
     }
 }
 module.exports = conferenceQueryResolvers

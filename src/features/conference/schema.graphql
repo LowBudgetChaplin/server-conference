@@ -73,6 +73,6 @@ input ConferenceFilterInput{
 }
 
 extend type Query{
-    conferenceList(filters: ConferenceFilterInput, useEmail: String!): [Conference]
+    conferenceList(filters: ConferenceFilterInput, userEmail: String!): [Conference]
     conference(id: Int!): Conference!
 }
