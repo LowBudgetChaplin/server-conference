@@ -1,5 +1,5 @@
 const {prisma} = require('../../prisma')
-
+const {map} = require('ramda')
 
 const conferenceQueryResolvers = {
     Query:{
@@ -9,6 +9,9 @@ const conferenceQueryResolvers = {
             if(filters?.startDate) localWhere.startDate = {gte: filters.startDate}
             if(filters?.endDate) localWhere.endDate = {lte: filters.endDate}
             return prisma().conference.findMany({where: localWhere})
+        },
+        conference: (_parent, {id}, _ctx, _info) =>{
+            return prisma().conference.findUnique({where:{id}})
         }
     },
     Conference:{
@@ -30,6 +33,12 @@ const conferenceQueryResolvers = {
               include: { dictionaryStatus: true }
             })
             return result?.dictionaryStatus
+          },
+          speakers: async ({id}) =>{
+            const result = await prisma()
+            .conference.findUnique({where:{id}})
+            .conferenceXSpeaker({include: {speaker: true}})
+            return map(({isMainSpeaker, speaker})=>({isMainSpeaker, ...speaker}), result)
           }
     },
     Location:{

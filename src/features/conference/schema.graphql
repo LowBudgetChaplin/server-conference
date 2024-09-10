@@ -1,16 +1,4 @@
 
-type Type{
-    id: Int!
-    name: String!
-    code: String
-}
-
-type Category{
-    id: Int!
-    name: String!
-    code: String
-}
-
 type Speaker{
     id: Int!
     name: String
@@ -18,24 +6,6 @@ type Speaker{
     nationality: String
     phoneNumber: String
     isMainSpeaker: Boolean
-}
-
-type County {
-  id: Int!
-  name: String!
-  code: String
-}
-
-type City {
-  id: Int!
-  name: String!
-  code: String
-}
-
-type Country {
-  id: Int!
-  name: String!
-  code: String
 }
 
 type Location {
@@ -62,7 +32,7 @@ type Conference{
     type: Type
     category: Category
     organizerEmail: String!
-    speakers: [Speaker!]!
+    speakers: [Speaker!]
     location: Location!
     status(userEmail: String!): Status
 }
