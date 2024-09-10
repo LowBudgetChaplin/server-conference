@@ -27,7 +27,8 @@ const conferenceQueryResolvers = {
     status: async ({ id }, { userEmail }) => {
       const result = await prisma().conferenceXAttendee.findUnique({
         where: {
-            attendeeEmail_conferenceId:{attendeeEmail: userEmail, conferenceId:id}
+          conferenceId: id,
+          attendeeEmail: userEmail
         },
         include: { dictionaryStatus: true }
       })
