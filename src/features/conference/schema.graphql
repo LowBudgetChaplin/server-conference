@@ -1,11 +1,10 @@
-
-type Speaker{
-    id: Int!
-    name: String
-    rating: Float
-    nationality: String
-    phoneNumber: String
-    isMainSpeaker: Boolean
+type Speaker {
+  id: Int!
+  name: String
+  rating: Float
+  nationality: String
+  phoneNumber: String
+  isMainSpeaker: Boolean
 }
 
 type Location {
@@ -19,30 +18,66 @@ type Location {
   longitude: Float
 }
 
-type Status{
-    id: Int!
-    name: String!
+type Status {
+  id: Int!
+  name: String!
 }
 
-type Conference{
-    id: Int!,
-    name: String!
-    startDate: DateTime!
-    endDate: DateTime!
-    type: Type
-    category: Category
-    organizerEmail: String!
-    speakers: [Speaker!]
-    location: Location!
-    status(userEmail: String!): Status
+type Conference {
+  id: Int!
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  type: Type
+  category: Category
+  organizerEmail: String!
+  speakers: [Speaker!]
+  location: Location!
+  status(userEmail: String!): Status
 }
 
-input ConferenceFilterInput{
-    startDate: DateTime
-    endDate: DateTime
+input ConferenceFilterInput {
+  startDate: DateTime
+  endDate: DateTime
 }
 
-extend type Query{
-    conferenceList(filters: ConferenceFilterInput, userEmail: String!): [Conference]
-    conference(id: Int!): Conference!
+extend type Query {
+  conferenceList(filters: ConferenceFilterInput, userEmail: String!): [Conference]
+  conference(id: Int!): Conference!
+}
+#
+extend type Mutation {
+  saveConference(input: ConferenceInput!): Conference!
+}
+
+input ConferenceInput {
+  id: Int
+  name: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  organizerEmail: String!
+  typeId: Int!
+  categoryId: Int!
+  location: LocationInput!
+  speakers: [SpeakerInput!]!
+  deletedSpeakers: [Int!]
+}
+
+input LocationInput {
+  id: Int
+  name: String!
+  address: String
+  cityId: Int!
+  countyId: Int!
+  countryId: Int!
+  latitude: Float
+  longitude: Float
+}
+
+input SpeakerInput {
+  id: Int
+  name: String!
+  nationality: String
+  rating: Float
+  isMainSpeaker: Boolean
 }
