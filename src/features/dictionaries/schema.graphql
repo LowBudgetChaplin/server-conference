@@ -1,4 +1,3 @@
-
 type Category {
   id: Int!
   name: String!
@@ -14,19 +13,19 @@ type Type {
 type Country {
   id: Int!
   name: String!
-  code: String    
+  code: String
 }
 
 type County {
   id: Int!
   name: String!
-  code: String    
+  code: String
 }
 
 type City {
   id: Int!
   name: String!
-  code: String    
+  code: String
 }
 
 extend type Query {
@@ -34,5 +33,5 @@ extend type Query {
   categoryList: [Category]!
   cityList: [City!]!
   countyList: [County!]!
-  countryList: [County!]!
+  countryList: [Country!]!
 }
