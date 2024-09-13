@@ -1,3 +1,5 @@
+const ConferenceAPI = require('../features/conference/conferenceAPI')
+
 module.exports.getDataSources = context => ({
-  // Instantiate your data sources here. e.g.: userApi: new UserApi(context)
+  conferenceAPI: new ConferenceAPI(context)
 })

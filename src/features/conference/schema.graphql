@@ -80,4 +80,5 @@ input SpeakerInput {
   nationality: String
   rating: Float
   isMainSpeaker: Boolean
+  phoneNumber: String
 }

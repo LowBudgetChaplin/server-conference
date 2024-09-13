@@ -1,14 +1,13 @@
-const { connect } = require('tedious')
 const { prisma } = require('../../prisma')
 const { map } = require('ramda')
 
 const conferenceMutationResolvers = {
   Mutation: {
-    saveConference: (_parent, { input }, _ctx, _info) => {
-      const { id: conferenceId, location, typeId, categoryId, deletedSpeakers, speakers, ...restConference } = input
-      const { id: locationId, ...restLocation } = location
+    saveConference: async (_parent, { input }, { dataSources }, _info) => {
+      const { id: conferenceId, location, typeId, categoryId, speakers, deletedSpeakers, ...restConference } = input
+      const { id: locationId, ...restLocation } = location //adica restul din locatie pe langa id = restlocation
 
-      const result = prisma().$transaction(async prismaClient => {
+      const result = await prisma().$transaction(async prismaClient => {
         const upsertedLocation = await prismaClient.location.upsert({
           where: { id: locationId || -1 },
           update: restLocation,
@@ -34,16 +33,17 @@ const conferenceMutationResolvers = {
           create: conferenceInput
         })
 
-        await prismaClient.conferenceXSpeaker.deleteMany({ where: { conferenceId, speakerId: { in: deletedSpeakers } } })
+        await prismaClient.ConferenceXSpeaker.deleteMany({
+          where: { conferenceId: conferenceId, speakerId: { in: deletedSpeakers } }
+        })
 
         await Promise.all(
           map(async ({ id: speakerId, isMainSpeaker, ...restSpeaker }) => {
             const upsertedSpeaker = await prismaClient.speaker.upsert({
-              where: { id: speakerId || -1 },
+              where: { id: speakerId },
               update: restSpeaker,
               create: restSpeaker
             })
-
             await prismaClient.conferenceXSpeaker.upsert({
               where: { conferenceId_speakerId: { conferenceId: upsertedConference.id, speakerId: upsertedSpeaker.id } },
               update: { isMainSpeaker },
@@ -52,10 +52,23 @@ const conferenceMutationResolvers = {
           }, speakers)
         )
 
-        return upsertedConference
+        return prismaClient.conference.findUnique({
+          where: { id: upsertedConference.id },
+          include: { conferenceXSpeaker: { include: { speaker: true } } }
+        })
       })
+      const updatedSpeakers = result.conferenceXSpeaker.map(s => s.speaker)
+      await Promise.all(
+        map(async speaker => {
+          await dataSources.conferenceAPI.sendSmsNotification({
+            conferenceId: result.id,
+            receiverId: speaker.id
+          })
+        }, updatedSpeakers)
+      )
       return result
     }
   }
 }
+
 module.exports = conferenceMutationResolvers
