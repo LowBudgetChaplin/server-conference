@@ -74,6 +74,12 @@ input LocationInput {
   longitude: Float
 }
 
+input AttendanceInput {
+  attendeeEmail: String
+  conferenceId: Int
+  statusId: Int
+}
+
 input SpeakerInput {
   id: Int
   name: String!
@@ -81,4 +87,9 @@ input SpeakerInput {
   rating: Float
   isMainSpeaker: Boolean
   phoneNumber: String
+}
+
+extend type Mutation {
+  saveConference(input: ConferenceInput!): Conference
+  changeAttendanceStatus(input: AttendanceInput!): String
 }
