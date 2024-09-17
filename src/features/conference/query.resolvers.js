@@ -8,6 +8,7 @@ const conferenceQueryResolvers = {
       if (filters) localWhere = {}
       if (filters?.startDate) localWhere.startDate = { gte: filters.startDate }
       if (filters?.endDate) localWhere.endDate = { lte: filters.endDate }
+      if (filters?.search) localWhere.name = { contains: filters.search, mode: 'insensitive' }
       return prisma().conference.findMany({ where: localWhere })
     },
     conference: (_parent, { id }, _ctx, _info) => {

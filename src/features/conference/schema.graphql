@@ -4,6 +4,7 @@ type Speaker {
   rating: Float
   nationality: String
   phoneNumber: String
+  email: String
   isMainSpeaker: Boolean
 }
 
@@ -87,9 +88,11 @@ input SpeakerInput {
   rating: Float
   isMainSpeaker: Boolean
   phoneNumber: String
+  email: String
 }
 
 extend type Mutation {
   saveConference(input: ConferenceInput!): Conference
   changeAttendanceStatus(input: AttendanceInput!): String
+  deleteConference(id: Int!): String
 }

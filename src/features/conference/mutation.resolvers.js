@@ -64,9 +64,18 @@ const conferenceMutationResolvers = {
             conferenceId: result.id,
             receiverId: speaker.id
           })
+          // ,
+          // await dataSources.conferenceAPI.sendEmailNotification({
+          //   conferenceId: result.id,
+          //   receiverId: speaker.id
+          // })
         }, updatedSpeakers)
       )
       return result
+    },
+    deleteConference: async (_parent, { id }, _ctx, _info) => {
+      await prisma().conference.delete({ where: { id } })
+      return 'Conference deleted successfully'
     },
 
     changeAttendanceStatus: async (_parent, { input }, _ctx, _info) => {
