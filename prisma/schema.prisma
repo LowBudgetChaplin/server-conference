@@ -68,6 +68,7 @@ model ConferenceXSpeaker {
   conferenceId  Int        @map("ConferenceId")
   speakerId     Int        @map("SpeakerId")
   isMainSpeaker Boolean?   @map("IsMainSpeaker")
+  rating        Decimal?   @map("Rating")
   conference    Conference @relation(fields: [conferenceId], references: [id], onUpdate: NoAction, map: "FK_ConferenceXSpeaker_Conference", onDelete: Cascade)
   speaker       Speaker    @relation(fields: [speakerId], references: [id], onUpdate: NoAction, map: "FK_ConferenceXSpeaker_Speaker")
 

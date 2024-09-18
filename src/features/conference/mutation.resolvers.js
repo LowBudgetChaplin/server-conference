@@ -5,7 +5,7 @@ const conferenceMutationResolvers = {
   Mutation: {
     saveConference: async (_parent, { input }, { dataSources }, _info) => {
       const { id: conferenceId, location, typeId, categoryId, speakers, deletedSpeakers, ...restConference } = input
-      const { id: locationId, ...restLocation } = location //adica restul din locatie pe langa id = restlocation
+      const { id: locationId, ...restLocation } = location
 
       const result = await prisma().$transaction(async prismaClient => {
         const upsertedLocation = await prismaClient.location.upsert({
@@ -47,7 +47,11 @@ const conferenceMutationResolvers = {
             await prismaClient.conferenceXSpeaker.upsert({
               where: { conferenceId_speakerId: { conferenceId: upsertedConference.id, speakerId: upsertedSpeaker.id } },
               update: { isMainSpeaker },
-              create: { conferenceId: upsertedConference.id, speakerId: upsertedSpeaker.id, isMainSpeaker }
+              create: {
+                conferenceId: upsertedConference.id,
+                speakerId: upsertedSpeaker.id,
+                isMainSpeaker
+              }
             })
           }, speakers)
         )
@@ -95,6 +99,14 @@ const conferenceMutationResolvers = {
       })
       return null
     }
+
+    // changeSpeakerRating: async (_parent, {input}, _ctx, _info) => {
+    //   await prisma().conferenceXSpeaker.update({
+    //     where: { conferenceId_speakerId: { conferenceId: input.conferenceId, speakerId: input.speakerId } },
+    //     data: { rating: input.rating }
+    //   })
+    //   return null
+    // },
   }
 }
 
