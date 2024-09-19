@@ -99,14 +99,6 @@ const conferenceMutationResolvers = {
       })
       return null
     }
-
-    // changeSpeakerRating: async (_parent, {input}, _ctx, _info) => {
-    //   await prisma().conferenceXSpeaker.update({
-    //     where: { conferenceId_speakerId: { conferenceId: input.conferenceId, speakerId: input.speakerId } },
-    //     data: { rating: input.rating }
-    //   })
-    //   return null
-    // },
   }
 }
 
